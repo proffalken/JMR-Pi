@@ -22,4 +22,4 @@ This will:
   * Start a remote desktop server
   * Launch JMRI
 
-
+Note: You will be prompted for a password during the installation to allow you to connect to the remote desktop server.  This password should be between 6 and 8 characters in length.
