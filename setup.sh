@@ -22,7 +22,7 @@ ln -s /usr/lib/jni/librxtxSerial.so
 # create the jmri user that we will run as:
 useradd -m jmri
 
-# copy the files to the correct location:
+# copy the files to the correct location and set permissions:
 cp $WORKING_DIR/scripts/init.d/vncserver /etc/init.d/vncserver
 chmod +x /etc/init.d/vncserver
 mkdir -p /home/jmri/.config/lxsession/LXDE
@@ -30,8 +30,11 @@ echo '@/opt/JMRI/PanelPro' >> /home/jmri/.config/lxsession/LXDE/autostart
 mkdir /home/jmri/.vnc
 cp $WORKING_DIR/scripts/passwd /home/jmri/.vnc/passwd
 chown -Rf jmri: /home/jmri
+chown -Rf jmri: /opt/JMRI
 # start the services:
 /etc/init.d/vncserver start
+# add the vnc service to start at boot
+update-rc.d vncserver defaults
 
 # get the current ip address
 if [ -e /sys/class/net/wlan0 ]; then
