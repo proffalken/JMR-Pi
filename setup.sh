@@ -24,6 +24,7 @@ wget -O $JMRI_VERSION.tgz "https://sourceforge.net/projects/jmri/files/productio
 if [ $? -ne 0 ]
 then
   error "Failed to download JMRI sources."
+  exit 1
 fi
 
 echo "Unpacking the source into /opt"
@@ -55,6 +56,7 @@ mkdir -p /home/jmri/.config/lxsession/LXDE
 echo '@/opt/JMRI/PanelPro' >> /home/jmri/.config/lxsession/LXDE/autostart
 mkdir /home/jmri/.vnc
 cp $WORKING_DIR/scripts/passwd /home/jmri/.vnc/passwd
+cp $WORKING_DIR/scripts/vnc/xstartup /home/jmri/.vnc/xstartup
 chown -Rf jmri: /home/jmri
 chown -Rf jmri: /opt/JMRI
 
