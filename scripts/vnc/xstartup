@@ -1,0 +1,6 @@
+#!/bin/sh
+xrdb $HOME/.Xresources
+xsetroot -solid grey
+x-window-manager &
+export XKL_XMODMAP_DISABLE=1
+/opt/JMRI/PanelPro
