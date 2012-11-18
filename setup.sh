@@ -47,7 +47,7 @@ mv librxtxSerial.so librxtxSerial.so.jmri
 ln -s /usr/lib/jni/librxtxSerial.so
 
 # create the jmri user that we will run as:
-useradd -m jmri
+useradd -m -G users,dialout jmri
 
 # copy the files to the correct location and set permissions:
 cp $WORKING_DIR/scripts/init.d/vncserver /etc/init.d/vncserver
