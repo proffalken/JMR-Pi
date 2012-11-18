@@ -57,6 +57,7 @@ echo '@/opt/JMRI/PanelPro' >> /home/jmri/.config/lxsession/LXDE/autostart
 mkdir /home/jmri/.vnc
 cp $WORKING_DIR/scripts/passwd /home/jmri/.vnc/passwd
 cp $WORKING_DIR/scripts/vnc/xstartup /home/jmri/.vnc/xstartup
+chmod +x /home/jmri/.vnc/xstartup
 chown -Rf jmri: /home/jmri
 chown -Rf jmri: /opt/JMRI
 
@@ -79,7 +80,7 @@ fi
 IPADDRESS="$(ifconfig $INTERFACE | sed -n '/^[A-Za-z0-9]/ {N;/dr:/{;s/.*dr://;s/ .*//;p;}}')"
 
 # echo the details:
-echo -e "Your JMRI server is ready...\n============\n\nPlease connect to $IPADDRESSi:5901 with a VNC client to configure JMRI.\n\nPlease note that JMRI will take several minutes to start the first time it is run."
+echo -e "Your JMRI server is ready...\n============\n\nPlease connect to $IPADDRESS:5901 with a VNC client to configure JMRI.\n\nPlease note that JMRI will take several minutes to start the first time it is run."
 
 exit 0
 
