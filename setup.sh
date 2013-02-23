@@ -2,7 +2,8 @@
 #
 # JMR-Pi - Copyright Matthew Macdonald-Wallace 2012
 
-JMRI_VERSION="JMRI.3.0-r20870"
+JMRI_URL=$(curl -s http://jmri.org/releaselist -o - | tr '\n' ' ' | cut -d ":" -f 5,6 | cut -d " " -f 2 | cut -d '"' -f 2)
+JMRI_PACKAGE_NAME=$(curl -s http://jmri.org/releaselist -o - | tr '\n' ' ' | cut -d ":" -f 6 | cut -d "/" -f 8)
 WORKING_DIR=$(pwd)
 
 function warning()
@@ -19,8 +20,8 @@ function error()
 # create the downloads dir and get the latest stable version of JMRI
 mkdir jmri_downloads
 cd jmri_downloads
-echo "Fetching JMRI from sourceforge"
-wget -O $JMRI_VERSION.tgz "https://sourceforge.net/projects/jmri/files/production%20files/$JMRI_VERSION.tgz/download"
+echo "Downloading latest production release from $JMRI_URL to $JMRI_PACKAGE_NAME"
+wget -O $JMRI_PACKAGE_NAME "$JMRI_URL"
 if [ $? -ne 0 ]
 then
   error "Failed to download JMRI sources."
@@ -29,35 +30,34 @@ fi
 
 echo "Unpacking the source into /opt"
 cd /opt
-tar -zxf $WORKING_DIR/jmri_downloads/$JMRI_VERSION.tgz
+tar -zxf $WORKING_DIR/jmri_downloads/$JMRI_PACKAGE_NAME 
 if [ $? -ne 0 ]
 then
   error "Failed to unpack JMRI sources into /opt"
 fi
 
-# installing the correct java txrx library:
-apt-get -y install openjdk-7-jre librxtx-java tightvncserver
+## installing the correct java txrx library:
+apt-get -y install openjdk-7-jre librxtx-java x11vnc
 if [ $? -ne 0 ]
 then
   error "Failed to install dependencies"
 fi
 
-cd /opt/JMRI/lib/linux/armv5
-mv librxtxSerial.so librxtxSerial.so.jmri
-ln -s /usr/lib/jni/librxtxSerial.so
+
+####### Uncomment this if you've changed the script to use a much older version that still requires the RXTX Hack
+#cd /opt/JMRI/lib/linux/armv5
+#mv librxtxSerial.so librxtxSerial.so.jmri
+#ln -s /usr/lib/jni/librxtxSerial.so
 
 # create the jmri user that we will run as:
 useradd -m -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,netdev,input jmri
 
 # copy the files to the correct location and set permissions:
+cp $WORKING_DIR/scripts/lightdm/lightdm.conf /etc/lightdm/lightdm.conf
 cp $WORKING_DIR/scripts/init.d/vncserver /etc/init.d/vncserver
 chmod +x /etc/init.d/vncserver
 mkdir -p /home/jmri/.config/lxsession/LXDE
 echo '@/opt/JMRI/PanelPro' >> /home/jmri/.config/lxsession/LXDE/autostart
-mkdir /home/jmri/.vnc
-cp $WORKING_DIR/scripts/passwd /home/jmri/.vnc/passwd
-cp $WORKING_DIR/scripts/vnc/xstartup /home/jmri/.vnc/xstartup
-chmod +x /home/jmri/.vnc/xstartup
 chown -Rf jmri: /home/jmri
 chown -Rf jmri: /opt/JMRI
 
