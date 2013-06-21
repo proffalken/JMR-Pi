@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/xml/XSLT/panelfile-2-9-6.xsl"?>
+<layout-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://jmri.org/xml/schema/layout-2-9-6.xsd">
+  <jmriversion>
+    <major>3</major>
+    <minor>2</minor>
+    <test>0</test>
+    <modifier />
+  </jmriversion>
+  <gui LAFclass="Metal" class="apps.configurexml.GuiLafConfigPaneXml" LocaleLanguage="en" LocaleCountry="GB" LocaleVariant="" nonStandardMouseEvent="no" />
+  <fileLocations class="apps.configurexml.FileLocationPaneXml">
+    <fileLocation defaultScriptLocation="/opt/JMRI/jython" />
+    <fileLocation defaultUserLocation="/home/jmri/.jmri" />
+    <fileLocation defaultThrottleLocation="/home/jmri/.jmri/throttle" />
+  </fileLocations>
+  <console class="apps.configurexml.SystemConsoleConfigPanelXml" scheme="0" fontfamily="Monospaced" fontsize="12" fontstyle="0" wrapstyle="2" />
+  <perform name="jmri.jmrit.withrottle.WiThrottleCreationAction" type="Action" class="apps.configurexml.PerformActionModelXml" />
+  <!--Written by JMRI version 3.2-r21862 on Sat Jun 08 20:35:33 BST 2013 $Id: XmlFile.java 21564 2012-11-05 00:16:22Z jacobsen $-->
+</layout-config>
+

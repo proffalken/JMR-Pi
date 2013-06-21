@@ -20,8 +20,13 @@ function error()
 # create the downloads dir and get the latest stable version of JMRI
 mkdir jmri_downloads
 cd jmri_downloads
-echo "Downloading latest production release from $JMRI_URL to $JMRI_PACKAGE_NAME"
-wget -O $JMRI_PACKAGE_NAME "$JMRI_URL"
+if [ -f $JMRI_PACKAGE_NAME ]
+then
+  echo -e "Package already downloading, skipping this step..."
+else
+  echo "Downloading latest production release from $JMRI_URL to $JMRI_PACKAGE_NAME"
+  wget -O $JMRI_PACKAGE_NAME "$JMRI_URL"
+fi
 if [ $? -ne 0 ]
 then
   error "Failed to download JMRI sources."
@@ -50,11 +55,36 @@ fi
 #ln -s /usr/lib/jni/librxtxSerial.so
 
 # create the jmri user that we will run as:
-useradd -m -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,netdev,input jmri
+useradd -m -s /bin/bash -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,netdev,input jmri
+echo -e "jmri:trains" | (chpasswd)
+
+# install SAMBA and configure a file server:
+apt-get -y install samba samba-common-bin
+if [ $? -ne 0 ]
+then
+  error "Failed to install samba"
+fi
+
+cp $WORKING_DIR/scripts/samba/smb.conf /etc/samba/smb.conf
+if [ $? -ne 0 ]
+then
+  error "Failed to copy samba config file"
+fi
+service samba restart
+mkdir /home/jmri/.jmri
+chown -Rf jmri: /home/jmri/.jmri
+
+# add the user to the Samba database
+echo -e "trains\ntrains" | (smbpasswd -a -s jmri)
 
 # copy the files to the correct location and set permissions:
 cp $WORKING_DIR/scripts/lightdm/lightdm.conf /etc/lightdm/lightdm.conf
 cp $WORKING_DIR/scripts/init.d/vncserver /etc/init.d/vncserver
+if [ ! -f /home/jmri/.jmri/PanelProConfig2.xml ]
+then
+  cp $WORKING_DIR/scripts/jmri/PanelProConfig2.xml /home/jmri/.jmri/PanelProConfig2.xml
+  ln -s /home/jmri/.jmri/JmriFacelessConfig3.xml /home/jmri/.jmri/PanelProConfig2.xml
+fi
 chmod +x /etc/init.d/vncserver
 mkdir -p /home/jmri/.config/lxsession/LXDE
 echo '@/opt/JMRI/PanelPro' >> /home/jmri/.config/lxsession/LXDE/autostart
@@ -80,7 +110,7 @@ fi
 IPADDRESS="$(ifconfig $INTERFACE | sed -n '/^[A-Za-z0-9]/ {N;/dr:/{;s/.*dr://;s/ .*//;p;}}')"
 
 # echo the details:
-echo -e "Your JMRI server is ready...\n============\n\nPlease connect to $IPADDRESS:5901 with a VNC client to configure JMRI.\n\nPlease note that JMRI will take several minutes to start the first time it is run."
+echo -e "Your JMRI server is ready...\n============\n\nPlease connect to $IPADDRESS:5901 with a VNC client to configure JMRI.\n\nPlease note that JMRI will take several minutes to start the first time it is run.\n\nYour config files should be available by browsing to \\\\\\$IPADDRESS\\JMRI\\ "
 
 exit 0
 
