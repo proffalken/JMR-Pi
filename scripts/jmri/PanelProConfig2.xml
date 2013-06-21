@@ -14,6 +14,7 @@
     <fileLocation defaultThrottleLocation="/home/jmri/.jmri/throttle" />
   </fileLocations>
   <console class="apps.configurexml.SystemConsoleConfigPanelXml" scheme="0" fontfamily="Monospaced" fontsize="12" fontstyle="0" wrapstyle="2" />
+  <perform name="jmri.web.server.WebServerAction" type="Action" class="apps.configurexml.PerformActionModelXml" />
   <perform name="jmri.jmrit.withrottle.WiThrottleCreationAction" type="Action" class="apps.configurexml.PerformActionModelXml" />
   <!--Written by JMRI version 3.2-r21862 on Sat Jun 08 20:35:33 BST 2013 $Id: XmlFile.java 21564 2012-11-05 00:16:22Z jacobsen $-->
 </layout-config>
