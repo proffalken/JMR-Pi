@@ -42,7 +42,7 @@ then
 fi
 
 ## installing the correct dependencies:
-apt-get -y install x11vnc
+apt-get -y install oracle-java8-jdk x11vnc
 if [ $? -ne 0 ]
 then
   error "Failed to install dependencies"
