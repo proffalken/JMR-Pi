@@ -41,8 +41,8 @@ then
   error "Failed to unpack JMRI sources into /opt"
 fi
 
-## installing the correct java txrx library:
-apt-get -y install openjdk-7-jre librxtx-java x11vnc
+## installing the correct dependencies:
+apt-get -y install oracle-java8-jdk x11vnc
 if [ $? -ne 0 ]
 then
   error "Failed to install dependencies"
